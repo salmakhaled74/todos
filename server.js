@@ -18,9 +18,20 @@ app.get('/register', (req, res) => {
     res.sendFile('index.html', { root: __dirname + '/public' });
 });
 
-app.get('/login', (req, res) => {
-    res.sendFile('login.html', { root: __dirname + '/public' });
-});
+app.get('/login', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.redirect('/login');
+    }
+    try {
+      const playload = jwt.verify(token, 'secret');
+      const userId = playload.userId;
+      const todos = await Todo.find({ user: userId });
+      res.render('todo.html', { todos: JSON.stringify(todos) });
+    } catch (err) {
+      res.redirect('/login');
+    }
+  });
 
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
@@ -37,43 +48,52 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-        const token = jwt.sign({ userId: user._id }, 'secret');
+        const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
         res.cookie('token', token);
-        res.redirect('/todo');
+        const todos = await Todo.find({ user: user._id });
+        res.json({ message: 'success', todos });
     } else {
         res.send('try again');
     }
 });
 
-app.post('/todo.html', async (req, res) => {
-    const { task } = req.body;
-    const token = req.cookies.token;
-    try {
-        const playload = jwt.verify(token, 'secret');
-        const userId = playload.userId;
-        const todo = new Todo({ task, completed: false, user: userId });
-        await todo.save();
-        const todos = await Todo.find({ user: userId });
-        res.json(todos);
-    } catch (err) {
-        res.status(401).send('unauthorized');
+app.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/login');
+});
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // Check if user exists and password is correct
+    const user = await User.findOne({ username });
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+        return res.status(401).send('Invalid credentials');
     }
+
+    // Generate a JWT token and set it as a cookie
+    const token = jwt.sign({ userId: user._id }, 'secret');
+    res.cookie('token', token, { httpOnly: true });
+
+    // Redirect to todo.html
+    res.redirect('/todo.html');
 });
 
 app.get('/todo.html', async (req, res) => {
     const token = req.cookies.token;
     try {
-        const playload = jwt.verify(token, 'secret');
-        const userId = playload.userId;
-        const todos = await Todo.find({ user: userId });
-        res.json(todos);
+      const playload = jwt.verify(token, 'secret');
+      const userId = playload.userId;
+  
+      // Fetch user's tasks from the database
+      const todos = await Todo.find({ user: userId });
+  
+      // Render the HTML template with the tasks
+      res.render('todo', { todos });
     } catch (err) {
-        res.status(401).send('unauthorized');
+      res.status(401).send('Unauthorized');
     }
-});
-app.get('/todo', (req, res) => {
-    res.sendFile('todo.html', { root: __dirname + '/public' });
-});
+  });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -24,7 +24,23 @@ form {
   padding: 20px;
 }
 
-
+.logout{
+  background-color: #FF69B4;
+  border: 2px solid white;
+  border-radius: 15px;
+  color: #FFFFFF;
+  font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  min-height: 60px;
+  transition: transform 0.2s ease-in-out;
+}
+.logout:hover{
+  transform: translateY(-2px);
+  background-color: white;
+  color: #FF69B4;
+}
 .b1 {
   margin-right: 50px;
   background-color: #e7008a;
@@ -109,6 +125,11 @@ body {
   margin: 0;
   min-height: 60px;
   transition: transform 0.2s ease-in-out;
+}
+
+.add:hover{
+  background-color: white;
+  color: #FF69B4;
 }
 
 .b1:hover, .add:hover {

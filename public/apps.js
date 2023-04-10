@@ -1,7 +1,7 @@
 const todoForm = document.querySelector('.todo-form');
 const Add = document.querySelector('.add');
 const taskInput = document.querySelector('.task-input');
-
+const logout = document.querySelector('.logout');
 
 todoForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -36,7 +36,7 @@ todoForm.addEventListener('submit', (event) => {
             editIcon.style.color = '#FF69B4';
 
             newDiv.style.display = 'inline-block';
-            newDiv.style.marginLeft = '20px';
+            newDiv.marginLeft = '20px';
             newDiv.style.border = '5px solid #FF69B4';
             newDiv.style.borderRadius = '30px';
             newDiv.textalign = 'center';
@@ -53,9 +53,7 @@ todoForm.addEventListener('submit', (event) => {
             newDiv.style.color = 'balck';
             newDiv.style.fontSize = '25px';
             newDiv.style.fontWeight = '';
-            newDiv.textContent = data.task;
-
-
+            newDiv.textContent = task;
             outerDiv.style.display = 'flex';
             outerDiv.style.marginLeft = '50px';
 
@@ -111,3 +109,18 @@ todoForm.addEventListener('submit', (event) => {
         });
 });
 
+logout.addEventListener('click', (event) => {
+    event.preventDefault();
+    fetch('/logout', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(response => {
+            console.log(response); // Check response content
+            console.log('redirecting to login...');
+            window.location.href = '/login';
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
