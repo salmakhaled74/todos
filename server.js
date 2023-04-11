@@ -30,7 +30,7 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
     res.cookie('token', token);
     const todos = await Todo.find({ user: user._id });
-    res.json({ message: 'success', todos });
+    res.redirect('/todo');
   } else {
     res.json({ loginFailed: true });
   }
@@ -83,8 +83,7 @@ app.get('/todo', async (req, res) => {
       res.status(500).send('Internal server error');
       return;
     }
-
-    res.render('todo.html', { todo });
+    res.render('todo.html', { todos: todo });
   });
 });
 

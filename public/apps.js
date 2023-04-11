@@ -118,6 +118,30 @@ todoForm.addEventListener('submit', async (event) => {
     }
 });
 
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    console.log(data);
+    if (data.loginFailed) {
+        emailBorder.style.borderColor = 'red';
+        passwordBorder.style.borderColor = 'red';
+    } else {
+        window.location.href = '/todo';
+    }
+});
+
 
 logout.addEventListener('click', (event) => {
     event.preventDefault();
