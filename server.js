@@ -6,8 +6,11 @@ const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const jwt = require('jsonwebtoken');
 const Todo = require('./models/todo');
+const exphbs  = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -76,16 +79,15 @@ app.get('/todo', async (req, res) => {
     res.redirect('/login');
     return;
   }
-
-  Todo.find({ user: userId }, (err, todo) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
-      return;
-    }
-    res.render('todo.html', { todos: todo });
-  });
+  try {
+    const todos = await Todo.find();
+    res.render('todo', { todos });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
 });
+
 
 
 const port = process.env.PORT || 3000;
