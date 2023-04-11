@@ -45,7 +45,7 @@ app.get('/login', async (req, res) => {
     const playload = jwt.verify(token, 'secret');
     const userId = playload.userId;
     const todos = await Todo.find({ user: userId });
-    res.redirect('/todo.html', { todos: JSON.stringify(todos) });
+    res.render('todo.html', { todos: todos });
   } catch (err) {
     res.redirect('/login');
   }
@@ -68,17 +68,26 @@ app.get('/logout', (req, res) => {
 });
 
 
-app.get('/todo.html', async (req, res) => {
+app.get('/todo', async (req, res) => {
   const token = req.cookies.token;
-  try {
-    const playload = jwt.verify(token, 'secret');
-    const userId = playload.userId;
-    const todos = await Todo.find({ user: userId });
-    res.redirect('/todo.html', { todos });
-  } catch (err) {
-    res.status(401).send('Unauthorized');
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
   }
+
+  Todo.find({ user: userId }, (err, todo) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal server error');
+      return;
+    }
+
+    res.render('todo.html', { todo });
+  });
 });
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
