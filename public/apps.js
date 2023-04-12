@@ -7,15 +7,45 @@ const editIcons = document.querySelectorAll('.fa-solid.fa-calendar-days.fa-2xl')
 const completeIcons = document.querySelectorAll('.fas.fa-regular.fa-circle-check.fa-2xl');
 const task = document.querySelectorAll('.task-input');
 
+editIcons.forEach((editIcon, index) => {
+    editIcon.addEventListener('click', (event) => {
+        event.preventDefault();
+        alert('Edit');
+    });
+});
+
+deleteIcons.forEach((deleteIcon, index) => {
+    deleteIcon.addEventListener('click', (event) => {
+        event.preventDefault();
+        const todoId = newDiv[index].getAttribute('data-id');
+        fetch('/todo/' + todoId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(respone => {
+                console.log(respone);
+                console.log('Todo deleted');
+                newDiv[index].remove();
+                iconsDiv[index].remove();
+            })
+            .catch(error => {
+                console.log(error);
+                console.log('error deleting task')
+            });
+    });
+});
+
 completeIcons.forEach((completeIcon, index) => {
     completeIcon.addEventListener('click', (event) => {
         event.preventDefault();
-        fetch('/todo', {
+        fetch('/todo/:id/status', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ task: newDiv[index].textContent }),
+            body: JSON.stringify({ task: task.completed }),
         })
             .then(response => {
                 console.log(response);
@@ -44,22 +74,6 @@ completeIcons.forEach((completeIcon, index) => {
 });
 
 
-logout.addEventListener('click', (event) => {
-    event.preventDefault();
-    alert('Logout');
-    fetch('/logout', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(response => {
-            console.log(response);
-            console.log('redirecting to login...');
-            window.location.href = '/login';
-        })
-        .catch(err => {
-            console.log(err);
-        });
-});
 
 Add.addEventListener('click', (event) => {
     event.preventDefault();
@@ -143,37 +157,19 @@ Add.addEventListener('click', (event) => {
 });
 
 
-
-editIcons.forEach((editIcon, index) => {
-    editIcon.addEventListener('click', (event) => {
-        event.preventDefault();
-        alert('Edit');
-    });
-});
-
-deleteIcons.forEach((deleteIcon, index) => {
-    deleteIcon.addEventListener('click', (event) => {
-        event.preventDefault();
-        fetch('/todo', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ task: title }),
+logout.addEventListener('click', (event) => {
+    event.preventDefault();
+    alert('Logout');
+    fetch('/logout', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(response => {
+            console.log(response);
+            console.log('redirecting to login...');
+            window.location.href = '/login';
         })
-            .then(respone => {
-                if (respone.status === 201) {
-                    newDiv[index].remove();
-                    iconsDiv[index].remove();
-                    console.log('Todo deleted');
-                } else {
-                    console.log('Failed to delete todo');
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                console.log('error deleting task')
-            });
-    });
+        .catch(err => {
+            console.log(err);
+        });
 });
-
