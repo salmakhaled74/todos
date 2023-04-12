@@ -6,11 +6,11 @@ const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const jwt = require('jsonwebtoken');
 const Todo = require('./models/todo');
-const exphbs  = require('express-handlebars');
+const ejs = require('ejs');
 const cookieParser = require('cookie-parser');
 
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.engine('ejs', ejs.renderFile);
+app.set('view engine', 'ejs');
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -48,7 +48,7 @@ app.get('/login', async (req, res) => {
     const playload = jwt.verify(token, 'secret');
     const userId = playload.userId;
     const todos = await Todo.find({ user: userId });
-    res.render('todo.html', { todos: todos });
+    res.render('todo.ejs', { todos: todos });
   } catch (err) {
     res.redirect('/login');
   }

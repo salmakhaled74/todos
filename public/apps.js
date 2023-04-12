@@ -33,56 +33,6 @@ todoForm.addEventListener('submit', async (event) => {
         const deleteIcon = document.createElement('i');
         const iconsDiv = document.createElement('div');
         const outerDiv = document.createElement('div');
-
-        newDiv.className = 'todo-item';
-        deleteIcon.className = 'fa-solid fa-trash fa-2xl';
-        eventIcon.className = 'fa-solid fa-calendar-days fa-2xl';
-        editIcon.className = 'fa-solid fa-pen-to-square fa-2xl';
-        completeIcon.className = 'fas fa-regular fa-circle-check fa-2xl';
-        completeIcon.style.color = '#FF69B4';
-        deleteIcon.style.color = '#FF69B4';
-        eventIcon.style.color = '#FF69B4';
-        editIcon.style.color = '#FF69B4';
-
-        newDiv.style.display = 'inline-block';
-        newDiv.marginLeft = '20px';
-        newDiv.style.border = '5px solid #FF69B4';
-        newDiv.style.borderRadius = '30px';
-        newDiv.textalign = 'center';
-        newDiv.style.display = 'flex';
-        newDiv.style.flexDirection = 'column';
-        newDiv.style.justifyContent = 'center';
-        newDiv.style.textAlign = 'center';
-        newDiv.style.width = '300px';
-        newDiv.style.padding = '10px';
-        newDiv.style.marginTop = '5px';
-        newDiv.style.marginLeft = '350px';
-        newDiv.style.height = '50px';
-        newDiv.style.backgroundColor = 'white';
-        newDiv.style.color = 'balck';
-        newDiv.style.fontSize = '25px';
-        newDiv.style.fontWeight = '';
-        newDiv.textContent = todo.task;
-        outerDiv.style.display = 'flex';
-        outerDiv.style.marginLeft = '50px';
-
-        completeIcon.style.paddingLeft = '10px';
-        eventIcon.style.paddingLeft = '10px';
-        editIcon.style.paddingLeft = '10px';
-        deleteIcon.style.paddingLeft = '10px';
-
-        iconsDiv.style.display = 'flex';
-        iconsDiv.style.justifyContent = 'center';
-        iconsDiv.style.alignItems = 'center';
-
-        outerDiv.appendChild(newDiv);
-        outerDiv.appendChild(iconsDiv);
-        container.appendChild(outerDiv);
-        iconsDiv.appendChild(deleteIcon);
-        iconsDiv.appendChild(editIcon);
-        iconsDiv.appendChild(eventIcon);
-        iconsDiv.appendChild(completeIcon);
-
         completeIcon.addEventListener('click', (event) => {
             event.preventDefault();
             newDiv.style.textDecoration = 'line-through';
@@ -115,30 +65,6 @@ todoForm.addEventListener('submit', async (event) => {
 
     } catch (error) {
         console.log(error);
-    }
-});
-
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
-
-    const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-    });
-
-    const data = await response.json();
-    console.log(data);
-    if (data.loginFailed) {
-        emailBorder.style.borderColor = 'red';
-        passwordBorder.style.borderColor = 'red';
-    } else {
-        window.location.href = '/todo';
     }
 });
 
