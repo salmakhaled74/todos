@@ -85,6 +85,28 @@ app.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
+//add todo
+app.post('/todo', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todo = new Todo({
+      task: req.body.task,
+      user: userId
+    });
+    await todo.save();
+    res.status(201).send('Todo created');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating todo');
+  }
+});
+
 //get all todos
 app.get('/todo', async (req, res) => {
   const token = req.cookies.token;
@@ -128,27 +150,7 @@ app.delete('/todo/:id', async (req, res) => {
   }
 });
 
-//add todo
-app.post('/todo', async (req, res) => {
-  const token = req.cookies.token;
-  const playload = jwt.verify(token, 'secret');
-  const userId = playload.userId;
-  if (!userId) {
-    res.redirect('/login');
-    return;
-  }
-  try {
-    const todo = new Todo({
-      task: req.body.title,
-      user: userId
-    });
-    await todo.save();
-    res.status(201).send('Todo created');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error creating todo');
-  }
-});
+
 
 //update todo
 app.put('/todo/:id', async (req, res) => {
