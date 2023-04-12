@@ -12,10 +12,24 @@ const cookieParser = require('cookie-parser');
 app.engine('ejs', ejs.renderFile);
 app.set('view engine', 'ejs');
 app.use(cookieParser('secret'));
+
+app.use('/public', express.static('public', {
+  setHeaders: function (res, path, stat) {
+    res.set('Content-Type', 'application/javascript')
+  }
+}))
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 mongoose.connect("mongodb+srv://salma:Xdd2MhwNMUbNSyAL@todo.q0p66ec.mongodb.net/?retryWrites=true&w=majority")
+  .then(() => {
+    console.log('Database connected successfully');
+  })
+  .catch((err) => {
+    console.error('Error connecting to the database', err);
+  });
 
 app.get('/register', (req, res) => {
   res.sendFile('index.html', { root: __dirname + '/public' });
@@ -54,6 +68,7 @@ app.get('/login', async (req, res) => {
   }
 });
 
+//new user
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
   const hash = await bcrypt.hash(password, 12);
@@ -70,8 +85,28 @@ app.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
-
+//get all todos
 app.get('/todo', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  console.log('UserId:', userId);
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todos = await Todo.find();
+    console.log('Todos:', todos);
+    res.render('todo', { todos });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error getting todos');
+  }
+});
+
+//delete todo
+app.delete('/todo/:id', async (req, res) => {
   const token = req.cookies.token;
   const playload = jwt.verify(token, 'secret');
   const userId = playload.userId;
@@ -80,11 +115,86 @@ app.get('/todo', async (req, res) => {
     return;
   }
   try {
-    const todos = await Todo.find();
-    res.render('todo', { todos });
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    await todo.remove();
+    res.status(200).send('Todo deleted');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal server error');
+    res.status(500).send('Error deleting todo');
+  }
+});
+
+//add todo
+app.post('/todo', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todo = new Todo({
+      task: req.body.title,
+      user: userId
+    });
+    await todo.save();
+    res.status(201).send('Todo created');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating todo');
+  }
+});
+
+//update todo
+app.put('/todo/:id', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    todo.task = req.body.title;
+    await todo.save();
+    res.status(200).send('Todo updated');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating todo');
+  }
+});
+
+//update todo status
+app.put('/todo/:id/status', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    todo.completed = true;
+    await todo.save();
+    res.status(200).send('Todo updated');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating todo status');
   }
 });
 
