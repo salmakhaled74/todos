@@ -19,25 +19,30 @@
         </form>
 
         <% for (var i=0; i < todos.length; i++) { %>
-            <div style="display:flex; margin-left:50px;">
+            <div id="<%= todos[i]._id %>" style="display:flex; margin-left:50px;">
                 <div class="todo-item"
                     style="display:inline-block; margin-left:20px; border:5px solid #FF69B4; border-radius:30px;
-             text-align:center; display:flex; flex-direction:column; justify-content:center; 
-             text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
-              background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
+                       text-align:center; display:flex; flex-direction:column; justify-content:center; 
+                       text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
+                       background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
                     <%= todos[i].task %>
                 </div>
                 <div class="icons" style="display:flex; justify-content:center; align-items:center">
-                    <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                    <a href="#" data-id="<%= todos[i]._id %>" class="status-icon">
+                        <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                    </a>
                     <i class="fa-solid fa-calendar-days fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
                     <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
-                    <i class="fa-solid fa-trash fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                    <a href="#" data-id="<%= todos[i]._id %>" class="delete-icon">
+                        <i class="fa-solid fa-trash fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                    </a>
                 </div>
             </div>
             <% } %>
 
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://kit.fontawesome.com/3c14fe92a8.js" crossorigin="anonymous"></script>
-    <script src="/public/apps.js"></script>
+    <script type="module" src="/public/apps.js"></script>
 </body>

@@ -127,30 +127,6 @@ app.get('/todo', async (req, res) => {
   }
 });
 
-//delete todo
-app.delete('/todo/:id', async (req, res) => {
-  const token = req.cookies.token;
-  const playload = jwt.verify(token, 'secret');
-  const userId = playload.userId;
-  if (!userId) {
-    res.redirect('/login');
-    return;
-  }
-  try {
-    const todo = await Todo.findById(req.params.id);
-    if (!todo) {
-      res.status(404).send('Todo not found');
-      return;
-    }
-    await todo.remove();
-    res.status(200).send('Todo deleted');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error deleting todo');
-  }
-});
-
-
 
 //update todo
 app.put('/todo/:id', async (req, res) => {
@@ -186,7 +162,7 @@ app.put('/todo/:id/status', async (req, res) => {
     return;
   }
   try {
-    const todo = await Todo.findById(req.params.id);
+    const todo = await Todo.findById({_id: req.params.id});
     if (!todo) {
       res.status(404).send('Todo not found');
       return;
@@ -200,7 +176,28 @@ app.put('/todo/:id/status', async (req, res) => {
   }
 });
 
-
+//delete todo
+app.delete('/todo/:id', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const result = await Todo.deleteOne({_id: req.params.id});
+    console.log('Result:', result);
+    if (result.deletedCount === 0) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    res.status(200).send('Todo deleted');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error deleting todo');
+  }
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
