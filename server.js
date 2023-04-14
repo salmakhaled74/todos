@@ -103,7 +103,7 @@ app.post('/todo', async (req, res) => {
       completed: false
     });
     await todo.save();
-    res.status(201).send('Todo created');
+    res.status(201).json({ message: 'Todo created' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error creating todo');
