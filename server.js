@@ -87,6 +87,8 @@ app.get('/logout', (req, res) => {
 
 //add todo
 app.post('/todo', async (req, res) => {
+  const { task } = req.body;
+  console.log('Task:', task);
   const token = req.cookies.token;
   const playload = jwt.verify(token, 'secret');
   const userId = playload.userId;
@@ -96,8 +98,9 @@ app.post('/todo', async (req, res) => {
   }
   try {
     const todo = new Todo({
-      task: req.body.task,
-      user: userId
+      task,
+      user: userId, 
+      completed: false
     });
     await todo.save();
     res.status(201).send('Todo created');
@@ -106,6 +109,8 @@ app.post('/todo', async (req, res) => {
     res.status(500).send('Error creating todo');
   }
 });
+
+
 
 //get all todos
 app.get('/todo', async (req, res) => {
