@@ -227,8 +227,8 @@ logouts.forEach((logout) => {
     })
       .then(response => {
         console.log(response);
-        console.log('redirecting to login...');
-        window.location.href = '/login';
+        console.log('redirecting to home...');
+        window.location.href = '/home';
       })
       .catch(err => {
         console.log(err);

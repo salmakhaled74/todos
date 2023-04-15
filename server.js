@@ -89,7 +89,7 @@ app.post('/register', async (req, res) => {
 
 app.get('/logout', (req, res) => {
   res.clearCookie('token');
-  res.redirect('/login');
+  res.redirect('/home');
 });
 
 //add todo

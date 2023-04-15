@@ -37,7 +37,7 @@ form {
 }
 
 .logout{
-  background-color: #FF69B4;
+  background-color: #ff32ad;
   border: 2px solid white;
   border-radius: 15px;
   color: #FFFFFF;
@@ -51,7 +51,7 @@ form {
 .logout:hover{
   transform: translateY(-2px);
   background-color: white;
-  color: #FF69B4;
+  color: #ff32ad;
 }
 .b1 {
   margin-right: 50px;
@@ -78,7 +78,7 @@ body {
 }
 .task-input, .edit-input {
   border-radius: 30px;
-  border: 5px solid #ff72b8;
+  border: 5px solid #ff32ad;
   padding: 10px;
   width: 50%;
   height: 50px;
@@ -91,7 +91,7 @@ body {
   left: 0;
   height: 100%;
   width: 300px;
-  background-color: #FF69B4;
+  background-color: #ff32ad;
 }
 .cont1 {
   display: flex;
@@ -123,12 +123,12 @@ body {
   font-weight: 500;
   line-height: 1.2;
   margin-top: 0;
-  color: #FF69B4;
+  color: #ff32ad;
 }
 
 .add{
-  background-color: #FF69B4;
-  border: 2px solid #FF69B4;
+  background-color: #ff32ad;
+  border: 2px solid #ff32ad;
   border-radius: 15px;
   color: #FFFFFF;
   font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -141,7 +141,7 @@ body {
 
 .add:hover{
   background-color: white;
-  color: #FF69B4;
+  color: #ff32ad;
 }
 
 .b1:hover, .add:hover {
@@ -207,17 +207,46 @@ h3 {
   margin: 40px;
 }
 
-.try {
-  color: #ff32ad;
-}
 
 nav {
-  background-color: #FF69B4;
-  height: 60px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  box-sizing: border-box;
+	background-color: #ff32ad;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 80px;
+	padding: 0 50px;
+	position: sticky;
+	top: 0;
+	z-index: 999;
+}
+
+.logo  a{
+	color: white;
+	font-size: 2rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.nav-links {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 50%;
+}
+
+.nav-links li, .logo li{
+	list-style: none;
+}
+
+.logo .add:hover{
+  color: #ff00ff;
+}
+
+.nav-links a {
+	color: white;
+	font-size: 1.5rem;
+	font-weight: 500;
+	padding: 0 20px;
+	text-decoration: none;
+	transition: all 0.3s ease;
 }
