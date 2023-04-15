@@ -33,6 +33,10 @@ mongoose.connect("mongodb+srv://salma:Xdd2MhwNMUbNSyAL@todo.q0p66ec.mongodb.net/
   });
 
 
+app.get('/home', (req, res) => {
+  res.sendFile('home.html', { root: __dirname + '/public' });
+});
+
 app.get('/register', (req, res) => {
   res.sendFile('index.html', { root: __dirname + '/public' });
 });
