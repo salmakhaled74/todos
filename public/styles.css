@@ -250,3 +250,30 @@ nav {
 	text-decoration: none;
 	transition: all 0.3s ease;
 }
+
+.container5 {
+  display: flex;
+}
+
+.content1, .content2 {
+  flex: 1;
+  padding: 20px; 
+}
+
+.content1 img {
+  max-width: 100%;
+  height: auto;
+}
+
+.inner{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: right;
+  height: 100%;
+}
+.btn {
+  align-self: flex-start;
+  background-color: #7a0b4d;
+  border: 2px solid #7a0b4d;
+}
