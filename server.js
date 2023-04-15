@@ -36,27 +36,28 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
+  console.log('hi');
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    res.json({ loginFailed: true });
-    return;
+    res.status(404).send({message: "Login failed! Check authentication credentials"});
   }
   const validPassword = await bcrypt.compare(password, user.password);
   if (validPassword) {
     const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
+    console.log('Token:', token);
     res.cookie('token', token);
-    const todos = await Todo.find({ user: user._id });
     res.redirect('/todo');
   } else {
-    res.json({ loginFailed: true });
+    res.status(404).send({message: "Login failed! Check authentication credentials"});
   }
 });
 
 app.get('/login', async (req, res) => {
   const token = req.cookies.token;
+  console.log('Token:', token);
   if (!token) {
-    return res.redirect('/login');
+    res.sendFile('login.html', { root: __dirname + '/public' });
   }
   try {
     const playload = jwt.verify(token, 'secret');
@@ -64,7 +65,7 @@ app.get('/login', async (req, res) => {
     const todos = await Todo.find({ user: userId });
     res.render('todo.ejs', { todos: todos });
   } catch (err) {
-    res.redirect('/login');
+    console.log(err);
   }
 });
 
@@ -99,7 +100,7 @@ app.post('/todo', async (req, res) => {
   try {
     const todo = new Todo({
       task,
-      user: userId, 
+      user: userId,
       completed: false
     });
     await todo.save();
@@ -123,7 +124,7 @@ app.get('/todo', async (req, res) => {
     return;
   }
   try {
-    const todos = await Todo.find({ user: userId});
+    const todos = await Todo.find({ user: userId });
     console.log('Todos:', todos);
     res.render('todo', { todos });
   } catch (err) {
@@ -167,7 +168,7 @@ app.put('/todo/:id/status', async (req, res) => {
     return;
   }
   try {
-    const todo = await Todo.findById({_id: req.params.id});
+    const todo = await Todo.findById({ _id: req.params.id });
     if (!todo) {
       res.status(404).send('Todo not found');
       return;
@@ -191,7 +192,7 @@ app.delete('/todo/:id', async (req, res) => {
     return;
   }
   try {
-    const result = await Todo.deleteOne({_id: req.params.id});
+    const result = await Todo.deleteOne({ _id: req.params.id });
     console.log('Result:', result);
     if (result.deletedCount === 0) {
       res.status(404).send('Todo not found');
