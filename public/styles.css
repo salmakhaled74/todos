@@ -2,6 +2,12 @@
   display: flex;
 }
 
+.form-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .login-
 .form{
   width: 650px;
@@ -43,7 +49,7 @@ form {
 }
 .b1 {
   margin-right: 50px;
-  background-color: #e7008a;
+  background-color: #ff32ad;
   border: 2px solid #1A1A1A;
   border-radius: 15px;
   box-sizing: border-box;
@@ -66,7 +72,7 @@ body {
 }
 .task-input, .edit-input {
   border-radius: 30px;
-  border: 5px solid #FF69B4;
+  border: 5px solid #ff72b8;
   padding: 10px;
   width: 50%;
   height: 50px;
@@ -178,7 +184,7 @@ body {
   flex-direction: column;
   gap:1.5rem;
 }
-.login-card-form .form-item{
+.login-card-form{
   position: relative;
 }
 
@@ -188,6 +194,9 @@ h3 {
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
-  margin-top: 0;
+  margin-top: 10px;
 }
 
+.form{
+  margin: 40px;
+}

@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const Todo = require('./models/todo');
 const ejs = require('ejs');
 const cookieParser = require('cookie-parser');
+const user = require('./models/user');
 
 app.engine('ejs', ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -31,12 +32,12 @@ mongoose.connect("mongodb+srv://salma:Xdd2MhwNMUbNSyAL@todo.q0p66ec.mongodb.net/
     console.error('Error connecting to the database', err);
   });
 
+
 app.get('/register', (req, res) => {
   res.sendFile('index.html', { root: __dirname + '/public' });
 });
 
 app.post('/login', async (req, res) => {
-  console.log('hi');
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -72,12 +73,13 @@ app.get('/login', async (req, res) => {
 //new user
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
+  console.log('Username:', email);
   const hash = await bcrypt.hash(password, 12);
   const user = new User({ email, password: hash });
   await user.save();
   const token = jwt.sign({ userId: user._id }, 'secret');
   res.cookie('token', token);
-  res.redirect('/');
+  res.redirect('/todo');
 });
 
 

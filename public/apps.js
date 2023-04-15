@@ -9,40 +9,40 @@ const todoforms = document.querySelectorAll('.todo-form');
 const addTodoForm = document.querySelector('.todo-form');
 
 
-editIcons.forEach((editIcon, index) => {
-  editIcon.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const todoId = editIcon.getAttribute('data-id');
-    const todoItem = document.getElementById(todoId);
-    const todoText = todoItem.querySelector('.todo-item');
-    const editForm = document.createElement('form');
-    const editInput = document.createElement('input');
-    editInput.className = 'edit-input';
-    editInput.type = 'text';
-    editInput.value = todoText.innerText;
-    const saveButton = document.createElement('button');
-    saveButton.type = 'submit';
-    saveButton.innerText = 'Save';
-    console.log('saveButton:', saveButton);
-    editForm.appendChild(editInput, saveButton);
-    todoItem.replaceChild(editForm, todoText);
-    try {
-      const editedTask = editInput.value;
-      const response = await fetch(`/todo/${todoId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ task: editedTask }),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to edit todo');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  });
-});
+// editIcons.forEach((editIcon, index) => {
+//   editIcon.addEventListener('click', async (event) => {
+//     event.preventDefault();
+//     const todoId = editIcon.getAttribute('data-id');
+//     const todoItem = document.getElementById(todoId);
+//     const todoText = todoItem.querySelector('.todo-item');
+//     const editForm = document.createElement('form');
+//     const editInput = document.createElement('input');
+//     editInput.className = 'edit-input';
+//     editInput.type = 'text';
+//     editInput.value = todoText.innerText;
+//     const saveButton = document.createElement('button');
+//     saveButton.type = 'submit';
+//     saveButton.innerText = 'Save';
+//     console.log('saveButton:', saveButton);
+//     editForm.appendChild(editInput, saveButton);
+//     todoItem.replaceChild(editForm, todoText);
+//     try {
+//       const editedTask = editInput.value;
+//       const response = await fetch(`/todo/${todoId}`, {
+//         method: 'GET',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ task: editedTask }),
+//       })
+//       if (!response.ok) {
+//         throw new Error('Failed to edit todo');
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   });
+// });
 
 
 
@@ -153,13 +153,22 @@ deleteIcons.forEach((deleteIcon) => {
   });
 });
 
+function getCookie(name) {
+  const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return cookieValue ? cookieValue.pop() : null;
+}
+
 logouts.forEach((logout) => {
   logout.addEventListener('click', (event) => {
     event.preventDefault();
     alert('Logout');
+    const token = getCookie('token');
     fetch('/logout', {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      }
     })
       .then(response => {
         console.log(response);
@@ -171,3 +180,8 @@ logouts.forEach((logout) => {
       });
   });
 });
+
+
+
+
+
