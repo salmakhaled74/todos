@@ -138,18 +138,18 @@ app.put('/todo/:id', async (req, res) => {
   const token = req.cookies.token;
   const playload = jwt.verify(token, 'secret');
   const userId = playload.userId;
+  const { task } = req.body;
+  const { id } = req.params;
   if (!userId) {
     res.redirect('/login');
     return;
   }
   try {
-    const todo = await Todo.findById(req.params.id);
+    const todo = await Todo.findByIdAndUpdate(id, { task });
     if (!todo) {
       res.status(404).send('Todo not found');
       return;
     }
-    todo.task = req.body.title;
-    await todo.save();
     res.status(200).send('Todo updated');
   } catch (err) {
     console.error(err);

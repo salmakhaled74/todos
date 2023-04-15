@@ -1,13 +1,51 @@
 const logout = document.querySelectorAll('.logout');
 const Add = document.querySelectorAll('.add');
-const editIcons = document.querySelectorAll('.fa-solid.fa-calendar-days.fa-2xl');
+const editIcons = document.querySelectorAll('.edit-icon');
 const newDiv = document.querySelectorAll('.todo-item');
 const iconsDiv = document.querySelectorAll('.icons');
 const deleteIcons = document.querySelectorAll('.delete-icon');
 const completeIcons = document.querySelectorAll('.status-icon');
 const todoforms = document.querySelectorAll('.todo-form');
-
 const addTodoForm = document.querySelector('.todo-form');
+
+console.log('editIcons:', editIcons);
+
+editIcons.forEach((editIcon, index) => {
+  editIcon.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const todoId = editIcon.getAttribute('data-id');
+    const todoItem = document.getElementById(todoId);
+    const todoText = todoItem.querySelector('.todo-item');
+    const editForm = document.createElement('form');
+    const editInput = document.createElement('input');
+    editInput.className = 'edit-input';
+    editInput.type = 'text';
+    editInput.value = todoText.innerText;
+    const saveButton = document.createElement('button');
+    saveButton.type = 'submit';
+    saveButton.innerText = 'Save';
+    console.log('saveButton:', saveButton);
+    editForm.appendChild(editInput, saveButton);
+    todoItem.replaceChild(editForm, todoText);
+    try {
+      const editedTask = editInput.value;
+      const response = await fetch(`/todo/${todoId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ task : editedTask }),
+      })
+      if(!response.ok) {
+        throw new Error('Failed to edit todo');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
+
+
 
 addTodoForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -89,15 +127,6 @@ completeIcons.forEach((completeIcon, index) => {
   })
 });
 
-
-
-
-editIcons.forEach((editIcon, index) => {
-  editIcon.addEventListener('click', (event) => {
-    event.preventDefault();
-    alert('Edit');
-  });
-});
 
 deleteIcons.forEach((deleteIcon) => {
   deleteIcon.addEventListener('click', async (event) => {
