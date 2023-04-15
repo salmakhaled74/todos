@@ -123,7 +123,7 @@ app.get('/todo', async (req, res) => {
     return;
   }
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ user: userId});
     console.log('Todos:', todos);
     res.render('todo', { todos });
   } catch (err) {

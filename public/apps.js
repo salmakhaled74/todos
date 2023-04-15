@@ -1,4 +1,4 @@
-const logout = document.querySelectorAll('.logout');
+const logouts = document.querySelectorAll('.logout');
 const Add = document.querySelectorAll('.add');
 const editIcons = document.querySelectorAll('.edit-icon');
 const newDiv = document.querySelectorAll('.todo-item');
@@ -8,7 +8,6 @@ const completeIcons = document.querySelectorAll('.status-icon');
 const todoforms = document.querySelectorAll('.todo-form');
 const addTodoForm = document.querySelector('.todo-form');
 
-console.log('editIcons:', editIcons);
 
 editIcons.forEach((editIcon, index) => {
   editIcon.addEventListener('click', async (event) => {
@@ -34,9 +33,9 @@ editIcons.forEach((editIcon, index) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ task : editedTask }),
+        body: JSON.stringify({ task: editedTask }),
       })
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error('Failed to edit todo');
       }
     } catch (error) {
@@ -154,20 +153,21 @@ deleteIcons.forEach((deleteIcon) => {
   });
 });
 
-
-logout.addEventListener('click', (event) => {
-  event.preventDefault();
-  alert('Logout');
-  fetch('/logout', {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  })
-    .then(response => {
-      console.log(response);
-      console.log('redirecting to login...');
-      window.location.href = '/login';
+logouts.forEach((logout) => {
+  logout.addEventListener('click', (event) => {
+    event.preventDefault();
+    alert('Logout');
+    fetch('/logout', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .then(response => {
+        console.log(response);
+        console.log('redirecting to login...');
+        window.location.href = '/login';
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
 });
