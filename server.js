@@ -213,7 +213,7 @@ app.delete('/todo/:id', async (req, res) => {
 });
 
 //date for todo
-app.put('/todo/:id/date', async (req, res) => {
+app.post('/todo/:id/date', async (req, res) => {
   const token = req.cookies.token;
   const playload = jwt.verify(token, 'secret');
   const userId = playload.userId;
@@ -235,6 +235,30 @@ app.put('/todo/:id/date', async (req, res) => {
     res.status(500).send('Error updating todo date');
   }
 });
+
+//delete all todos
+app.delete('/todo', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const result = await Todo.deleteMany({ user: userId });
+    console.log('Result:', result);
+    if (result.deletedCount === 0) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    res.status(200).send('Todo deleted');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error deleting todo');
+  }
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

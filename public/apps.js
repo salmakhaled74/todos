@@ -230,7 +230,8 @@ dateIcons.forEach((dateIcon, index) => {
       {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        minDate: "today"
+        minDate: "today",
+        defaultDate: "today"
       });
     try {
       const response = await fetch(`/todo/${todoId}/date`, {
@@ -238,12 +239,13 @@ dateIcons.forEach((dateIcon, index) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ date: datepicker.selectedDates[0] })
+        body: JSON.stringify({ date: datepicker.selectedDates[0].toISOString() })
       });
       if (response.ok) {
         const todoText = todoItem.querySelector('.todo-text');
         todoItem.insertBefore(dateInput, todoText);
         todoItem.classList.add('todo-item1');
+        console.log(datepicker.selectedDates[0]);
       }
     } catch (err) {
       console.error(err);
@@ -251,7 +253,31 @@ dateIcons.forEach((dateIcon, index) => {
   });
 });
 
+const clearButton = document.querySelector('.clear');
+clearButton.addEventListener('click', async (event) => {
+  event.preventDefault();
+  alert('Clear');
+  try {
+    const response = await fetch('/todo', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete todo');
+    }
+    const todoList = document.querySelectorAll('.todo-item');
+    const IconsList = document.querySelectorAll('.icons');
+    const secretList = document.querySelectorAll('.secret');
+    IconsList.forEach(icon => icon.remove());
+    secretList.forEach(secret => secret.remove());
+    todoList.forEach(todoItem => todoItem.remove());
 
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 
 

@@ -16,12 +16,19 @@
             <div class="form1">
                 <h1 class="headd">What do you plan to do?</h1>
                 <input name="task" placeholder="Add a new task" class="task-input">
-                <button type="submit" class="add">Add</button>
+                <div class="DivAdd">
+                    <button type="submit" class="add">Add</button>
+                </div>
+                <% if (todos.length> 1) { %>
+                    <div class="divClear">
+                        <button class="clear">Clear All</button>
+                    </div>
+                    <% } %>
             </div>
         </form>
 
         <% for (var i=0; i < todos.length; i++) { %>
-            <div id="<%= todos[i]._id %>" style="display:flex; margin-left:50px;">
+            <div id="<%= todos[i]._id %>" class="secret" style="display:flex; margin-left:50px;">
 
                 <div class="todo-item" style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
     text-align:center; display:flex; flex-direction:column; justify-content:center; 
