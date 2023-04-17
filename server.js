@@ -9,6 +9,7 @@ const Todo = require('./models/todo');
 const ejs = require('ejs');
 const cookieParser = require('cookie-parser');
 const user = require('./models/user');
+const flatpickr = require('flatpickr');
 
 app.engine('ejs', ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -49,7 +50,7 @@ app.post('/login', async (req, res) => {
   }
   const validPassword = await bcrypt.compare(password, user.password);
   if (validPassword) {
-    const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '24h' });
     console.log('Token:', token);
     res.cookie('token', token);
     res.redirect('/todo');
@@ -208,6 +209,30 @@ app.delete('/todo/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Error deleting todo');
+  }
+});
+
+//date for todo
+app.put('/todo/:id/date', async (req, res) => {
+  const token = req.cookies.token;
+  const playload = jwt.verify(token, 'secret');
+  const userId = playload.userId;
+  if (!userId) {
+    res.redirect('/login');
+    return;
+  }
+  try {
+    const todo = await Todo.findById({ _id: req.params.id });
+    if (!todo) {
+      res.status(404).send('Todo not found');
+      return;
+    }
+    todo.date = req.body.date;
+    await todo.save();
+    res.status(200).send('Todo date updated');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating todo date');
   }
 });
 

@@ -1,3 +1,4 @@
+
 const logouts = document.querySelectorAll('.logout');
 const Add = document.querySelectorAll('.add');
 const editIcons = document.querySelectorAll('.edit-icon');
@@ -8,6 +9,8 @@ const completeIcons = document.querySelectorAll('.status-icon');
 const todoforms = document.querySelectorAll('.todo-form');
 const addTodoForm = document.querySelector('.todo-form');
 const loginForm = document.querySelector('.login-card-form');
+
+const dateIcons = document.querySelectorAll('.date-icon');
 
 const formItem = document.querySelectorAll('.form-item');
 const formItemContainer = document.querySelectorAll('.form-item-container');
@@ -64,6 +67,7 @@ const passwordBorder = document.querySelector('.i2');
 //   //   })
 // });
 
+
 completeIcons.forEach((completeIcon, index) => {
   completeIcon.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -113,11 +117,7 @@ editIcons.forEach((editIcon, index) => {
     editInput.className = 'edit-input';
     editInput.type = 'text';
     editInput.value = todoText.innerText;
-    const saveButton = document.createElement('button');
-    saveButton.type = 'submit';
-    saveButton.innerText = 'Save';
     editForm.appendChild(editInput);
-    editForm.appendChild(saveButton);
     todoItem.replaceChild(editForm, todoText);
     editForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -215,6 +215,45 @@ deleteIcons.forEach((deleteIcon) => {
     }
   });
 });
+
+dateIcons.forEach((dateIcon, index) => {
+  dateIcon.addEventListener('click', async (event) => {
+    event.preventDefault();
+    alert('Date');
+    const todoId = dateIcon.getAttribute('data-id');
+    const todoItem = document.getElementById(todoId);
+    const dateInput = document.createElement('input');
+    dateInput.type = 'text';
+    dateInput.id = 'datepicker';
+    dateInput.classList.add('datepicker-input');
+    const datepicker = flatpickr(dateInput,
+      {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today"
+      });
+    try {
+      const response = await fetch(`/todo/${todoId}/date`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ date: datepicker.selectedDates[0] })
+      });
+      if (response.ok) {
+        const todoText = todoItem.querySelector('.todo-text');
+        todoItem.insertBefore(dateInput, todoText);
+        todoItem.classList.add('todo-item1');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  });
+});
+
+
+
+
 
 function getCookie(name) {
   const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
