@@ -21,26 +21,26 @@
         <% for (var i=0; i < todos.length; i++) { %>
             <div id="<%= todos[i]._id %>" style="display:flex; margin-left:50px;">
 
-                <div class="todo-item" style="display:inline-block; margin-left:20px; border:5px solid #FF69B4; border-radius:30px;
+                <div class="todo-item" style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
     text-align:center; display:flex; flex-direction:column; justify-content:center; 
     text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
-    background-color: <%= todos[i].completed ? '#FF69B4' : 'white' %>; color:<%= todos[i].completed ? 'white' : 'black' %>;
+    background-color: <%= todos[i].completed ? '#ff32ad' : 'white' %>; color:<%= todos[i].completed ? 'white' : 'black' %>;
     font-size:25px; font-weight:normal; display:flex; align-items:center;
     <%= todos[i].completed ? 'text-decoration: line-through;' : '' %>">
                     <%= todos[i].task %>
                 </div>
                 <div class="icons" style="display:flex; justify-content:center; align-items:center">
                     <a href="#" data-id="<%= todos[i]._id %>" class="status-icon">
-                        <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                        <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
                     <a href="#" data-id="<%= todos[i]._id %>" class="date-icon">
-                        <i class="fa-solid fa-calendar-days fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                        <i class="fa-solid fa-calendar-days fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
                     <a href="#" data-id="<%= todos[i]._id %>" class="edit-icon">
-                        <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                        <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
                     <a href="#" data-id="<%= todos[i]._id %>" class="delete-icon">
-                        <i class="fa-solid fa-trash fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+                        <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
                 </div>
             </div>

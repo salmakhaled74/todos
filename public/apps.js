@@ -10,10 +10,10 @@ const addTodoForm = document.querySelector('.todo-form');
 const loginForm = document.querySelector('.login-card-form');
 
 const formItem = document.querySelectorAll('.form-item');
-console.log('formItem:', formItem);
 const formItemContainer = document.querySelectorAll('.form-item-container');
 const emailBorder = document.querySelector('.i1');
 const passwordBorder = document.querySelector('.i2');
+
 
 // loginForm.addEventListener('submit', event => {
 //   event.preventDefault();
@@ -64,6 +64,43 @@ const passwordBorder = document.querySelector('.i2');
 //   //   })
 // });
 
+completeIcons.forEach((completeIcon, index) => {
+  completeIcon.addEventListener('click', async (event) => {
+    event.preventDefault();
+    alert('Complete');
+    const todoId = completeIcon.getAttribute('data-id');
+    try {
+      const response = await fetch(`/todo/${todoId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to complete todo');
+      }
+      newDiv[index].style.textDecoration = 'line-through';
+      newDiv[index].style.color = 'white';
+      newDiv[index].style.backgroundColor = '#ff32ad';
+      confetti({
+        particleCount: 100,
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        origin: {
+          x: event.clientX / window.innerWidth,
+          y: event.clientY / window.innerHeight,
+        },
+        colors: ['#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7'],
+        shapes: ['circle', 'square', 'triangle', 'heart'],
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  })
+});
+
+
 editIcons.forEach((editIcon, index) => {
   editIcon.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -72,32 +109,40 @@ editIcons.forEach((editIcon, index) => {
     const todoText = todoItem.querySelector('.todo-item');
     const editForm = document.createElement('form');
     const editInput = document.createElement('input');
+    editForm.className = 'edit-form';
     editInput.className = 'edit-input';
     editInput.type = 'text';
     editInput.value = todoText.innerText;
     const saveButton = document.createElement('button');
     saveButton.type = 'submit';
     saveButton.innerText = 'Save';
-    console.log('saveButton:', saveButton);
-    editForm.appendChild(editInput, saveButton);
+    editForm.appendChild(editInput);
+    editForm.appendChild(saveButton);
     todoItem.replaceChild(editForm, todoText);
-    try {
+    editForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
       const editedTask = editInput.value;
-      const response = await fetch(`/todo/${todoId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ task: editedTask }),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to edit todo');
+      console.log(editedTask);
+      try {
+        const response = await fetch(`/todo/${todoId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ task: editedTask }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to edit todo');
+        }
+        todoItem.replaceChild(todoText, editForm);
+        todoText.innerText = editedTask;
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
+    });
   });
 });
+
 
 
 
@@ -120,7 +165,7 @@ addTodoForm.addEventListener('submit', async (event) => {
     newTodoElement.innerHTML = `
       <div id="${newTodo._id}" style="display:flex; margin-left:50px;">
         <div class="todo-item"
-          style="display:inline-block; margin-left:20px; border:5px solid #FF69B4; border-radius:30px;
+          style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
           text-align:center; display:flex; flex-direction:column; justify-content:center; 
           text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
           background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
@@ -128,12 +173,12 @@ addTodoForm.addEventListener('submit', async (event) => {
         </div>
         <div class="icons" style="display:flex; justify-content:center; align-items:center">
           <a href="#" data-id="${newTodo._id}" class="status-icon">
-            <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+            <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
           </a>
-          <i class="fa-solid fa-calendar-days fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
-          <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+          <i class="fa-solid fa-calendar-days fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
+          <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
           <a href="#" data-id="${newTodo._id}" class="delete-icon">
-            <i class="fa-solid fa-trash fa-2xl" style="color:#FF69B4; padding-left:10px;"></i>
+            <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
           </a>
         </div>
       </div>
@@ -142,43 +187,6 @@ addTodoForm.addEventListener('submit', async (event) => {
   } catch (err) {
     console.error(err);
   }
-});
-
-
-completeIcons.forEach((completeIcon, index) => {
-  completeIcon.addEventListener('click', async (event) => {
-    event.preventDefault();
-    alert('Complete');
-    const todoId = completeIcon.getAttribute('data-id');
-    try {
-      const response = await fetch(`/todo/${todoId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to complete todo');
-      }
-      newDiv[index].style.textDecoration = 'line-through';
-      newDiv[index].style.color = 'white';
-      newDiv[index].style.backgroundColor = '#FF69B4';
-      confetti({
-        particleCount: 100,
-        startVelocity: 30,
-        spread: 360,
-        ticks: 60,
-        origin: {
-          x: event.clientX / window.innerWidth,
-          y: event.clientY / window.innerHeight,
-        },
-        colors: ['#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7'],
-        shapes: ['circle', 'square', 'triangle', 'heart'],
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  })
 });
 
 
@@ -237,6 +245,9 @@ logouts.forEach((logout) => {
 });
 
 
-
+const signUpbtn = document.querySelector('.b');
+signUpbtn.addEventListener('click', () => {
+  window.location.href = '/index.html';
+});
 
 
