@@ -216,6 +216,29 @@ deleteIcons.forEach((deleteIcon) => {
   });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+  console.log('hi');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    events: [
+      {
+        title: 'Event 1',
+        start: '2023-04-18T10:00:00',
+        end: '2023-04-18T12:00:00'
+      },
+      {
+        title: 'Event 2',
+        start: '2023-04-20T14:00:00',
+        end: '2023-04-20T16:00:00'
+      }
+    ]
+  });
+  calendar.render();
+});
+
+
 dateIcons.forEach((dateIcon, index) => {
   dateIcon.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -242,6 +265,7 @@ dateIcons.forEach((dateIcon, index) => {
         body: JSON.stringify({ date: datepicker.selectedDates[0].toISOString() })
       });
       if (response.ok) {
+        console.log(response);
         const todoText = todoItem.querySelector('.todo-text');
         todoItem.insertBefore(dateInput, todoText);
         todoItem.classList.add('todo-item1');

@@ -227,7 +227,8 @@ app.post('/todo/:id/date', async (req, res) => {
       res.status(404).send('Todo not found');
       return;
     }
-    todo.date = req.body.date;
+    const date = new Date(req.body.date);
+    todo.date = date;
     await todo.save();
     res.status(200).send('Todo date updated');
   } catch (err) {
