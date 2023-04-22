@@ -71,7 +71,6 @@ const passwordBorder = document.querySelector('.i2');
 completeIcons.forEach((completeIcon, index) => {
   completeIcon.addEventListener('click', async (event) => {
     event.preventDefault();
-    alert('Complete');
     const todoId = completeIcon.getAttribute('data-id');
     try {
       const response = await fetch(`/todo/${todoId}/status`, {
@@ -193,7 +192,6 @@ addTodoForm.addEventListener('submit', async (event) => {
 deleteIcons.forEach((deleteIcon) => {
   deleteIcon.addEventListener('click', async (event) => {
     event.preventDefault();
-    alert('Delete');
     const todoId = deleteIcon.getAttribute('data-id');
 
     try {
@@ -242,7 +240,6 @@ document.addEventListener('DOMContentLoaded', function () {
 dateIcons.forEach((dateIcon, index) => {
   dateIcon.addEventListener('click', async (event) => {
     event.preventDefault();
-    alert('Date');
     const todoId = dateIcon.getAttribute('data-id');
     const todoItem = document.getElementById(todoId);
     const dateInput = document.createElement('input');
@@ -280,7 +277,6 @@ dateIcons.forEach((dateIcon, index) => {
 const clearButton = document.querySelector('.clear');
 clearButton.addEventListener('click', async (event) => {
   event.preventDefault();
-  alert('Clear');
   try {
     const response = await fetch('/todo', {
       method: 'DELETE',
@@ -313,7 +309,6 @@ function getCookie(name) {
 logouts.forEach((logout) => {
   logout.addEventListener('click', (event) => {
     event.preventDefault();
-    alert('Logout');
     const token = getCookie('token');
     fetch('/logout', {
       method: 'GET',
