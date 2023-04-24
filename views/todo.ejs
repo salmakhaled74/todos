@@ -10,9 +10,9 @@
 <body>
     <div class="side">
         <button class="logout">Logout</button>
-        <button class="Events">Upcoming</button> 
+        <button class="Events">Upcoming</button>
     </div>
-    <div class="cont1 todo-list">
+    <div class="cont1 todo-list" id="Parent">
         <form action="/todo" method="POST" class="todo-form">
             <div class="form1">
                 <h1 class="headd">What do you plan to do?</h1>
@@ -32,7 +32,7 @@
         </form>
 
         <% for (var i=0; i < todos.length; i++) { %>
-            <div id="<%= todos[i]._id %>" class="secret" style="display:flex; margin-left:50px;">
+            <div id="<%= todos[i]._id %>" style="display:flex; margin-left:50px;">
                 <!-- <div class="dateContainer">
                     <label for="due-date">Due date:</label>
                     <input type="date" class="due-date" data-id="<%= todos[i]._id %>" name="due-date">
