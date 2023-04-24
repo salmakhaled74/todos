@@ -21,7 +21,7 @@
 			<li><a href="home.html">Home</a></li>
 			<li><a href="index.html">Sign Up</a></li>
 			<li><a href="login.html">Log in</a></li>
-			<li><a href="#">Contact</a></li>
+			<li><a href="#">About</a></li>
 		</ul>
 	</nav>
 	<div class="container5">
@@ -34,10 +34,17 @@
 				<h4>Todo is a simple to-do list app that helps you get more done.<br>
 					No frills, just simple to-do lists.
 				</h4>
-				<button class="b">Start for free</button>
+				<button class="bttt1">Start for free</button>
 			</div>
 		</div>
 	</div>
 	<script src="apps.js"></script>
+	<script>
+		const signUpbtn = document.querySelector('.bttt1');
+		signUpbtn.addEventListener('click', () => {
+			window.location.href = '/index.html';
+		});
+	</script>
 </body>
+
 </html>

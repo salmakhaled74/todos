@@ -358,7 +358,7 @@ nav {
   height: 100%;
 }
 
-.b {
+.bttt1 {
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 10px;
@@ -372,7 +372,7 @@ nav {
   font-size: 20px;
 }
 
-.b:hover {
+.bttt1:hover {
   background-color: #ff32ad;
   border: 2px solid #ff32ad;
 }

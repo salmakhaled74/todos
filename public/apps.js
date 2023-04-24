@@ -433,9 +433,4 @@ logouts.forEach((logout) => {
 });
 
 
-const signUpbtn = document.querySelector('.b');
-signUpbtn.addEventListener('click', () => {
-  window.location.href = '/index.html';
-});
-
 
