@@ -10,26 +10,33 @@
 <body>
     <div class="side">
         <button class="logout">Logout</button>
-        <a class="Events" href="events.html">Events</a>
+        <button class="Events">Upcoming</button> 
     </div>
     <div class="cont1 todo-list">
         <form action="/todo" method="POST" class="todo-form">
             <div class="form1">
                 <h1 class="headd">What do you plan to do?</h1>
+                <!-- <select id="category-select">
+                    <option value="all">All</option>
+                    <option value="completed">Completed</option>
+                    <option value="not-completed">Not Completed</option>
+                </select> -->
                 <input name="task" placeholder="Add a new task" class="task-input">
                 <div class="DivAdd">
                     <button type="submit" class="add">Add</button>
                 </div>
-                <% if (todos.length> 1) { %>
-                    <div class="divClear">
-                        <button class="clear">Clear All</button>
-                    </div>
-                    <% } %>
+                <div class="divClear">
+                    <button class="clear">Clear All</button>
+                </div>
             </div>
         </form>
+
         <% for (var i=0; i < todos.length; i++) { %>
             <div id="<%= todos[i]._id %>" class="secret" style="display:flex; margin-left:50px;">
-
+                <!-- <div class="dateContainer">
+                    <label for="due-date">Due date:</label>
+                    <input type="date" class="due-date" data-id="<%= todos[i]._id %>" name="due-date">
+                </div> -->
                 <div class="todo-item" style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
     text-align:center; display:flex; flex-direction:column; justify-content:center; 
     text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
@@ -42,15 +49,15 @@
                     <a href="#" data-id="<%= todos[i]._id %>" class="status-icon">
                         <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
-                    <a href="#" data-id="<%= todos[i]._id %>" class="date-icon">
-                        <i class="fa-solid fa-calendar-days fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-                    </a>
                     <a href="#" data-id="<%= todos[i]._id %>" class="edit-icon">
                         <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
                     <a href="#" data-id="<%= todos[i]._id %>" class="delete-icon">
                         <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
                     </a>
+                    <!-- <a href="#" data-id="<%= todos[i]._id %>" class="date-icon">
+                        <i class="far fa-calendar-alt fa-2x" style="color:#ff32ad; padding-left:10px;"></i>
+                    </a> -->
                 </div>
             </div>
             <% } %>

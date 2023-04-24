@@ -1,4 +1,3 @@
-
 const logouts = document.querySelectorAll('.logout');
 const Add = document.querySelectorAll('.add');
 const editIcons = document.querySelectorAll('.edit-icon');
@@ -16,6 +15,56 @@ const formItem = document.querySelectorAll('.form-item');
 const formItemContainer = document.querySelectorAll('.form-item-container');
 const emailBorder = document.querySelector('.i1');
 const passwordBorder = document.querySelector('.i2');
+
+
+
+addTodoForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const taskInput = document.querySelector('.task-input');
+  const task = taskInput.value;
+  taskInput.value = '';
+  try {
+    const response = await fetch('/todo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ task })
+    });
+    const data = await response.json();
+    const newTodo = data.newTodo;
+    const todoList = document.querySelector('.todo-list');
+    const newTodoElement = document.createElement('div');
+    newTodoElement.innerHTML = `
+      <div " style="display:flex; margin-left:50px;">
+        <div class="todo-item"
+          style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
+          text-align:center; display:flex; flex-direction:column; justify-content:center; 
+          text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
+          background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
+          ${task}
+        </div>
+        <div class="icons" style="display:flex; justify-content:center; align-items:center">
+          <a href="#" data-id="${newTodo}" class="status-icon">
+            <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
+          </a>
+          <a href="#" data-id="${newTodo}" class="edit-icon">
+          <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
+          </a>
+          <a href="#" data-id="${newTodo}" class="delete-icon">
+            <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
+          </a>
+          
+        </div>
+      </div>`;
+    todoList.appendChild(newTodoElement);
+    
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+
 
 
 // loginForm.addEventListener('submit', event => {
@@ -66,42 +115,33 @@ const passwordBorder = document.querySelector('.i2');
 //   //     }
 //   //   })
 // });
+// document.getElementById("category-select").addEventListener("change", function () {
+//   const todos = document.querySelectorAll(".todo-item");
+//   const select = this.value;
+//   todos.forEach(function (todo) {
+//     switch (select) {
+//       case "all":
+//         todo.style.display = "flex";
+//         break;
+//       case "Completed":
+//         if (todo.style.color === 'black') {
+//           todo.style.display = "flex";
+//         } else {
+//           todo.style.display = "none";
+//         }
+//         break;
+//       case "Not Completed":
+//         if (todo.style.color === 'white') {
+//           todo.style.display = "flex";
+//         } else {
+//           todo.style.display = "none";
+//         }
+//         break;
+//     }
+//   });
+// });
 
 
-completeIcons.forEach((completeIcon, index) => {
-  completeIcon.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const todoId = completeIcon.getAttribute('data-id');
-    try {
-      const response = await fetch(`/todo/${todoId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to complete todo');
-      }
-      newDiv[index].style.textDecoration = 'line-through';
-      newDiv[index].style.color = 'white';
-      newDiv[index].style.backgroundColor = '#ff32ad';
-      confetti({
-        particleCount: 100,
-        startVelocity: 30,
-        spread: 360,
-        ticks: 60,
-        origin: {
-          x: event.clientX / window.innerWidth,
-          y: event.clientY / window.innerHeight,
-        },
-        colors: ['#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7'],
-        shapes: ['circle', 'square', 'triangle', 'heart'],
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  })
-});
 
 
 editIcons.forEach((editIcon, index) => {
@@ -142,52 +182,40 @@ editIcons.forEach((editIcon, index) => {
   });
 });
 
-
-
-
-addTodoForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const taskInput = document.querySelector('.task-input');
-  const task = taskInput.value;
-  taskInput.value = '';
-  try {
-    const response = await fetch('/todo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ task })
-    });
-    const newTodo = await response.json();
-    const todoList = document.querySelector('.todo-list');
-    const newTodoElement = document.createElement('div');
-    newTodoElement.innerHTML = `
-      <div id="${newTodo._id}" style="display:flex; margin-left:50px;">
-        <div class="todo-item"
-          style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
-          text-align:center; display:flex; flex-direction:column; justify-content:center; 
-          text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
-          background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
-          ${task}
-        </div>
-        <div class="icons" style="display:flex; justify-content:center; align-items:center">
-          <a href="#" data-id="${newTodo._id}" class="status-icon">
-            <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-          </a>
-          <i class="fa-solid fa-calendar-days fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-          <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-          <a href="#" data-id="${newTodo._id}" class="delete-icon">
-            <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-          </a>
-        </div>
-      </div>
-    `;
-    todoList.appendChild(newTodoElement);
-  } catch (err) {
-    console.error(err);
-  }
+completeIcons.forEach((completeIcon, index) => {
+  completeIcon.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const todoId = completeIcon.getAttribute('data-id');
+    try {
+      const response = await fetch(`/todo/${todoId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to complete todo');
+      }
+      newDiv[index].style.textDecoration = 'line-through';
+      newDiv[index].style.color = 'white';
+      newDiv[index].style.backgroundColor = '#ff32ad';
+      confetti({
+        particleCount: 100,
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        origin: {
+          x: event.clientX / window.innerWidth,
+          y: event.clientY / window.innerHeight,
+        },
+        colors: ['#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7'],
+        shapes: ['circle', 'square', 'triangle', 'heart'],
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  })
 });
-
 
 deleteIcons.forEach((deleteIcon) => {
   deleteIcon.addEventListener('click', async (event) => {
@@ -214,65 +242,46 @@ deleteIcons.forEach((deleteIcon) => {
   });
 });
 
+// const calendarEl = document.getElementById('calendar');
+// document.addEventListener('DOMContentLoaded', function () {
+//   console.log('hi');
+//   const calendar = new FullCalendar.Calendar(calendarEl, {
+//     initialView: 'dayGridMonth',
+//     events: [
+//       {
+//         title: 'Event 1',
+//         start: '2023-04-18T10:00:00',
+//         end: '2023-04-18T12:00:00'
+//       },
+//       {
+//         title: 'Event 2',
+//         start: '2023-04-20T14:00:00',
+//         end: '2023-04-20T16:00:00'
+//       }
+//     ]
+//   });
+//   calendar.render();
+// });
 
-document.addEventListener('DOMContentLoaded', function () {
-  var calendarEl = document.getElementById('calendar');
-  console.log('hi');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    events: [
-      {
-        title: 'Event 1',
-        start: '2023-04-18T10:00:00',
-        end: '2023-04-18T12:00:00'
-      },
-      {
-        title: 'Event 2',
-        start: '2023-04-20T14:00:00',
-        end: '2023-04-20T16:00:00'
-      }
-    ]
-  });
-  calendar.render();
-});
-
-
-dateIcons.forEach((dateIcon, index) => {
-  dateIcon.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const todoId = dateIcon.getAttribute('data-id');
-    const todoItem = document.getElementById(todoId);
-    const dateInput = document.createElement('input');
-    dateInput.type = 'text';
-    dateInput.id = 'datepicker';
-    dateInput.classList.add('datepicker-input');
-    const datepicker = flatpickr(dateInput,
-      {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        minDate: "today",
-        defaultDate: "today"
-      });
-    try {
-      const response = await fetch(`/todo/${todoId}/date`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ date: datepicker.selectedDates[0].toISOString() })
-      });
-      if (response.ok) {
-        console.log(response);
-        const todoText = todoItem.querySelector('.todo-text');
-        todoItem.insertBefore(dateInput, todoText);
-        todoItem.classList.add('todo-item1');
-        console.log(datepicker.selectedDates[0]);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  });
-});
+// dateIcons.forEach((dateIcon) => {
+//   dateIcon.addEventListener('click', async (event) => {
+//     event.preventDefault();
+//     const todoId = event.target.closest('.date-icon').getAttribute('data-id');
+//     const newDueDate = event.target.value;
+//     try{
+//       const response = await fetch(`/todo/${todoId}/date`, {
+//         method: 'PUT',
+//         body: JSON.stringify({ date: newDueDate }),
+//         headers: { 'Content-Type': 'application/json' },
+//       })
+//       if(response.ok){
+//         console.log('yes');
+//       }
+//     }catch(error){
+//       console.log(error);
+//     }
+//   })
+// });
 
 const clearButton = document.querySelector('.clear');
 clearButton.addEventListener('click', async (event) => {
