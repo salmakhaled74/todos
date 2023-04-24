@@ -8,7 +8,6 @@ const completeIcons = document.querySelectorAll('.status-icon');
 const todoforms = document.querySelectorAll('.todo-form');
 const addTodoForm = document.querySelector('.todo-form');
 const loginForm = document.querySelector('.login-card-form');
-
 const dateIcons = document.querySelectorAll('.date-icon');
 
 const formItem = document.querySelectorAll('.form-item');
@@ -33,24 +32,23 @@ addTodoForm.addEventListener('submit', async (event) => {
     });
     const data = await response.json();
     const newTodo = data.newTodo;
-    const todoList = document.querySelector('.todo-list');
+    const todoList = document.querySelector('#Parent');
     const newTodoElement = document.createElement('div');
     newTodoElement.innerHTML = `
-      <div " style="display:flex; margin-left:50px;">
-        <div class="todo-item"
-          style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
+      <div class="todo-item-container" style="display:flex; margin-left:50px;">
+        <div class="todo-item" style="display:inline-block; margin-left:20px; border:5px solid #ff32ad; border-radius:30px;
           text-align:center; display:flex; flex-direction:column; justify-content:center; 
           text-align:center; width:300px; padding:10px; margin-top:5px; margin-left:350px; height:50px;
           background-color:white; color:black; font-size:25px; font-weight:normal; display:flex; align-items:center;">
           ${task}
         </div>
         <div class="icons" style="display:flex; justify-content:center; align-items:center">
-          <a href="#" data-id="${newTodo}" class="status-icon">
+        <a href="#" data-id="${newTodo}" class="status-icon">
             <i class="fas fa-regular fa-circle-check fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
           </a>
           <a href="#" data-id="${newTodo}" class="edit-icon">
-          <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
-          </a>
+  <i class="fa-solid fa-pen-to-square fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
+</a>
           <a href="#" data-id="${newTodo}" class="delete-icon">
             <i class="fa-solid fa-trash fa-2xl" style="color:#ff32ad; padding-left:10px;"></i>
           </a>
@@ -58,10 +56,107 @@ addTodoForm.addEventListener('submit', async (event) => {
         </div>
       </div>`;
     todoList.appendChild(newTodoElement);
-    
+
+    newTodoElement.querySelector('.status-icon').addEventListener('click', async (event) => {
+      event.preventDefault();
+      alert('hi');
+      const todoId = event.currentTarget.getAttribute('data-id');
+      try {
+        const response = await fetch(`/todo/${todoId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        confetti({
+          particleCount: 100,
+          startVelocity: 30,
+          spread: 360,
+          ticks: 60,
+          origin: {
+            x: event.clientX / window.innerWidth,
+            y: event.clientY / window.innerHeight,
+          },
+          colors: ['#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7'],
+          shapes: ['circle', 'square', 'triangle', 'heart'],
+        });
+        if (!response.ok) {
+          throw new Error('Failed to complete todo');
+        }
+        const todoItemContainer = event.target.closest('.todo-item-container');
+        const todoItem = todoItemContainer.querySelector('.todo-item');
+        todoItem.style.textDecoration = 'line-through';
+        todoItem.style.color = 'white';
+        todoItem.style.backgroundColor = '#ff32ad';
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    newTodoElement.querySelector('.delete-icon').addEventListener('click', async (event) => {
+      event.preventDefault();
+      alert('hi');
+      const todoId = event.currentTarget.getAttribute('data-id');
+      console.log(todoId);
+      try {
+        const response = await fetch(`/todo/${todoId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete todo');
+        }
+        const todoItem = event.target.closest('.todo-item-container');
+        todoItem.remove();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    newTodoElement.querySelector('.edit-icon').addEventListener('click', async (event) => {
+      event.preventDefault();
+      alert('edit');
+      const todoId = event.currentTarget.getAttribute('data-id');
+      const todoItem = event.target.closest('.todo-item-container');
+      const todoText = todoItem.querySelector('.todo-item');
+      const editForm = document.createElement('form');
+      const editInput = document.createElement('input');
+      editForm.className = 'edit-form';
+      editInput.className = 'edit-input';
+      editInput.type = 'text';
+      editInput.value = todoText.innerText;
+      editForm.appendChild(editInput);
+      todoItem.replaceChild(editForm, todoText);
+      editForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const editedTask = editInput.value;
+        console.log(editedTask);
+        try {
+          const response = await fetch(`/todo/${todoId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ task: editedTask }),
+          });
+          if (!response.ok) {
+            throw new Error('Failed to edit todo');
+          }
+          todoItem.replaceChild(todoText, editForm);
+          todoText.innerText = editedTask;
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    });
   } catch (err) {
     console.error(err);
   }
+
+
 });
 
 
