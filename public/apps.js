@@ -59,7 +59,6 @@ addTodoForm.addEventListener('submit', async (event) => {
 
     newTodoElement.querySelector('.status-icon').addEventListener('click', async (event) => {
       event.preventDefault();
-      alert('hi');
       const todoId = event.currentTarget.getAttribute('data-id');
       try {
         const response = await fetch(`/todo/${todoId}/status`, {
@@ -95,7 +94,6 @@ addTodoForm.addEventListener('submit', async (event) => {
 
     newTodoElement.querySelector('.delete-icon').addEventListener('click', async (event) => {
       event.preventDefault();
-      alert('hi');
       const todoId = event.currentTarget.getAttribute('data-id');
       console.log(todoId);
       try {
@@ -118,7 +116,6 @@ addTodoForm.addEventListener('submit', async (event) => {
 
     newTodoElement.querySelector('.edit-icon').addEventListener('click', async (event) => {
       event.preventDefault();
-      alert('edit');
       const todoId = event.currentTarget.getAttribute('data-id');
       const todoItem = event.target.closest('.todo-item-container');
       const todoText = todoItem.querySelector('.todo-item');
