@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const user = require('./models/user');
 const flatpickr = require('flatpickr');
 const passport = require('passport');
+require('dotenv').config();
 
 
 app.engine('ejs', ejs.renderFile);
@@ -30,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://salma:Xdd2MhwNMUbNSyAL@todo.q0p66ec.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
   .then(() => {
     console.log('Database connected successfully');
   })
